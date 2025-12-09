@@ -19,6 +19,7 @@ relays = [OutputDevice(pin, active_high=False) for pin in gpioList]
 # Globale Variable für Relais-Status
 relay_running = False
 relay_thread = None
+channel_states = [False] * 8  # Status für jeden Kanal
 
 def relay_loop():
     """Hauptschleife für Relais-Steuerung"""
@@ -36,15 +37,17 @@ def relay_loop():
             time.sleep(sleepTimeLong)
     
     # Alle Relais ausschalten beim Stoppen
-    for relay in relays:
+    for i, relay in enumerate(relays):
         relay.off()
+        channel_states[i] = False
 
 @app.route('/api/status', methods=['GET'])
 def get_status():
     """Gibt den aktuellen Status zurück"""
     return jsonify({
         'running': relay_running,
-        'relays': len(relays)
+        'relays': len(relays),
+        'channels': channel_states
     })
 
 @app.route('/api/start', methods=['POST'])
@@ -81,6 +84,75 @@ def stop_relay():
     return jsonify({
         'status': 'stopped',
         'message': 'Relais gestoppt'
+    })
+
+@app.route('/api/channels/<int:channel>/on', methods=['POST'])
+def channel_on(channel):
+    """Schaltet einen Kanal ein"""
+    global relay_running
+    
+    if relay_running:
+        return jsonify({'error': 'Automatische Sequenz läuft. Bitte zuerst stoppen.'}), 400
+    
+    if channel < 1 or channel > 8:
+        return jsonify({'error': 'Ungültiger Kanal (1-8)'}), 400
+    
+    idx = channel - 1
+    relays[idx].on()
+    channel_states[idx] = True
+    
+    return jsonify({
+        'status': 'on',
+        'channel': channel,
+        'message': f'Kanal {channel} eingeschaltet'
+    })
+
+@app.route('/api/channels/<int:channel>/off', methods=['POST'])
+def channel_off(channel):
+    """Schaltet einen Kanal aus"""
+    global relay_running
+    
+    if relay_running:
+        return jsonify({'error': 'Automatische Sequenz läuft. Bitte zuerst stoppen.'}), 400
+    
+    if channel < 1 or channel > 8:
+        return jsonify({'error': 'Ungültiger Kanal (1-8)'}), 400
+    
+    idx = channel - 1
+    relays[idx].off()
+    channel_states[idx] = False
+    
+    return jsonify({
+        'status': 'off',
+        'channel': channel,
+        'message': f'Kanal {channel} ausgeschaltet'
+    })
+
+@app.route('/api/channels/<int:channel>/toggle', methods=['POST'])
+def channel_toggle(channel):
+    """Schaltet einen Kanal um"""
+    global relay_running
+    
+    if relay_running:
+        return jsonify({'error': 'Automatische Sequenz läuft. Bitte zuerst stoppen.'}), 400
+    
+    if channel < 1 or channel > 8:
+        return jsonify({'error': 'Ungültiger Kanal (1-8)'}), 400
+    
+    idx = channel - 1
+    if channel_states[idx]:
+        relays[idx].off()
+        channel_states[idx] = False
+        status = 'off'
+    else:
+        relays[idx].on()
+        channel_states[idx] = True
+        status = 'on'
+    
+    return jsonify({
+        'status': status,
+        'channel': channel,
+        'message': f'Kanal {channel} {status}'
     })
 
 @app.route('/')

@@ -165,6 +165,122 @@
   color: #333;
 }
 
+.channels-section {
+  margin: 40px 0;
+  padding-top: 30px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.channels-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.channels-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+}
+
+.channels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.channel-button {
+  background: white;
+  border: 3px solid #e0e0e0;
+  border-radius: 15px;
+  padding: 20px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.channel-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.channel-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.channel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.channel-button.on {
+  border-color: #4caf50;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+}
+
+.channel-button.off {
+  border-color: #bdbdbd;
+  background: #fafafa;
+}
+
+.channel-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.channel-button.on .channel-number {
+  background: #4caf50;
+  color: white;
+}
+
+.channel-status {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.channel-status.active {
+  animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.channel-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.channel-button.on .channel-label {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
 @media (max-width: 480px) {
   .title {
     font-size: 2rem;
@@ -173,6 +289,25 @@
   .control-button {
     padding: 20px;
     font-size: 1.3rem;
+  }
+
+  .channels-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .channel-button {
+    padding: 15px 10px;
+  }
+
+  .channel-number {
+    font-size: 1.3rem;
+    width: 35px;
+    height: 35px;
+  }
+
+  .channel-status {
+    font-size: 1.6rem;
   }
 }
 
