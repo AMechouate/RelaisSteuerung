@@ -17,22 +17,24 @@ echo ""
 echo "📤 Kopiere auf Raspberry Pi..."
 
 # Versuche mit verschiedenen Methoden
-if scp -r ../build raspberrypi:~/relay-web-control/ 2>/dev/null; then
+if scp -r ../build adam@raspberrypi.local:~/relay-web-control/ 2>/dev/null; then
     echo "✅ Erfolgreich kopiert!"
-elif sudo scp -r ../build raspberrypi:~/relay-web-control/ 2>/dev/null; then
-    echo "✅ Erfolgreich kopiert (mit sudo)!"
+elif scp -r ../build raspberrypi:~/relay-web-control/ 2>/dev/null; then
+    echo "✅ Erfolgreich kopiert!"
 else
     echo "⚠️  Automatisches Kopieren fehlgeschlagen."
     echo ""
     echo "📋 Manuell kopieren:"
-    echo "   scp -r build raspberrypi:~/relay-web-control/"
+    echo "   scp -r build adam@raspberrypi.local:~/relay-web-control/"
     echo "   oder"
-    echo "   sudo scp -r build raspberrypi:~/relay-web-control/"
+    echo "   scp -r build raspberrypi:~/relay-web-control/"
 fi
 
 echo ""
 echo "🚀 Starte Server auf Raspberry Pi:"
-echo "   ssh raspberrypi"
+echo "   ssh adam@raspberrypi.local"
 echo "   cd ~/relay-web-control"
 echo "   python3 relay-web-backend.py"
+echo "   oder"
+echo "   sudo systemctl restart relay-web.service"
 

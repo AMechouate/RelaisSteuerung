@@ -1,0 +1,17 @@
+[Unit]
+Description=Relais Web Control Server
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/relay-web-control
+ExecStart=/usr/bin/python3 /home/pi/relay-web-control/relay-web-backend.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
